@@ -1,6 +1,22 @@
-export const getEmployeeList = () => {
+export const getEmployees = () => {
     return new Promise(async (resolve, reject) => {
-        fetch('http://localhost/employees/list', {
+        fetch('http://localhost/spaising/employee/list', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json())
+            .then(data => {
+                resolve(data);
+            }).catch(err => {
+                reject(err);
+            })
+    });
+}
+
+export const getEmployeeById = (id) => {
+    return new Promise(async (resolve, reject) => {
+        fetch('http://localhost/spaising/employee/' + id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -26,7 +42,7 @@ export const addEmployee = (data) => {
         formData.append('image', data.image);
     }
     return new Promise(async (resolve, reject) => {
-        fetch('http://localhost/employees/insert', {
+        fetch('http://localhost/spaising/employee/insert', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -54,7 +70,7 @@ export const updateEmployee = (data) => {
         formData.append('image', data.image);
     }
     return new Promise(async (resolve, reject) => {
-        fetch('http://localhost/employees/update', {
+        fetch('http://localhost/spaising/employee/update', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -71,7 +87,7 @@ export const updateEmployee = (data) => {
 
 export const deleteEmployee = (id) => {
     return new Promise(async (resolve, reject) => {
-        fetch('http://localhost/employees/delete/' + id, {
+        fetch('http://localhost/spaising/employee/delete/' + id, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
