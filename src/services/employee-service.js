@@ -1,32 +1,24 @@
+import axios from 'axios';
+
+const baseUrl = 'http://localhost/spaising';
+
 export const getEmployees = () => {
     return new Promise(async (resolve, reject) => {
-        fetch('http://localhost/spaising/employee/list', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json())
-            .then(data => {
-                resolve(data);
-            }).catch(err => {
-                reject(err);
-            })
+        axios.get(baseUrl + '/employees').then(res => {
+            resolve(res.data);
+        }).catch(err => {
+            reject(err);
+        });
     });
 }
 
 export const getEmployeeById = (id) => {
     return new Promise(async (resolve, reject) => {
-        fetch('http://localhost/spaising/employee/' + id, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json())
-            .then(data => {
-                resolve(data);
-            }).catch(err => {
-                reject(err);
-            })
+        axios.get(baseUrl + '/employees/' + id).then(res => {
+            resolve(res.data);
+        }).catch(err => {
+            reject(err);
+        });
     });
 }
 
@@ -42,18 +34,13 @@ export const addEmployee = (data) => {
         formData.append('image', data.image);
     }
     return new Promise(async (resolve, reject) => {
-        fetch('http://localhost/spaising/employee/insert', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: formData
-        }).then(res => res.json())
-            .then(data => {
-                resolve(data);
-            }).catch(err => {
-                reject(err);
-            })
+        axios.post(baseUrl + '/employee/insert', formData).then(res => {
+            console.log(res);
+            resolve(res.data);
+        }).catch(err => {
+            reject(err);
+            console.log(err)
+        });
     });
 }
 
@@ -70,33 +57,26 @@ export const updateEmployee = (data) => {
         formData.append('image', data.image);
     }
     return new Promise(async (resolve, reject) => {
-        fetch('http://localhost/spaising/employee/update', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: formData
-        }).then(res => res.json())
-            .then(data => {
-                resolve(data);
-            }).catch(err => {
-                reject(err);
-            })
+        axios.post(baseUrl + '/employee/update', formData).then(res => {
+            console.log(res);
+            resolve(res.data);
+        }).catch(err => {
+            reject(err);
+            console.log(err);
+        });
     });
 }
 
 export const deleteEmployee = (id) => {
     return new Promise(async (resolve, reject) => {
-        fetch('http://localhost/spaising/employee/delete/' + id, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        }).then(res => res.json())
-            .then(data => {
-                resolve(data);
-            }).catch(err => {
-                reject(err);
-            })
+        axios.delete(baseUrl + '/employee/delete/' + id, {
+            headers: { "Access-Control-Allow-Origin": "*" }
+        }).then(res => {
+            console.log(res);
+            resolve(res.data);
+        }).catch(err => {
+            reject(err);
+            console.log(err);
+        });
     });
 }

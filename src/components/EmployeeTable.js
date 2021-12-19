@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 //services
-import { getEmployees } from './../services/employee-service';
+import { getEmployees, deleteEmployee } from './../services/employee-service';
 
 // material-ui
 import Paper from '@mui/material/Paper';
@@ -19,6 +19,7 @@ import { Button } from '@mui/material';
 const { useState, useEffect } = React;
 
 const columns = [
+  { id: 'action', label: 'Action', minWidth: 30, align: 'center' },
   { id: 'name', label: 'Name', minWidth: 50 },
   { id: 'email', label: 'Email', minWidth: 100 },
   { id: 'dob', label: 'Date\u00A0of\u00A0Birth', minWidth: 50 },
@@ -60,6 +61,21 @@ const EmployeeTable = () => {
     setPage(0);
   };
 
+  const onDeleteHandler = (id) => {
+    deleteEmployee(id).then(res => {
+      if (res.status) {
+        const newRows = rows.filter(row => row.id !== id);
+        setRows(newRows);
+      } else {
+        alert(res.message);
+        console.log(res.message);
+      }
+    }).catch(err => {
+      alert('Something went wrong');
+      console.log(err);
+    });
+  }
+
   return (
     <>
       {rows.length && <div>
@@ -69,7 +85,7 @@ const EmployeeTable = () => {
           margin: "20px 0",
         }}>
           <Button variant="contained">
-            <Link to="/add" className="btn-link">Add New Employee</Link>
+            <Link to="/" className="btn-link">Add New Employee</Link>
           </Button>
         </div>
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -95,14 +111,25 @@ const EmployeeTable = () => {
                     return (
                       <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                         {columns.map((column) => {
-                          const value = row[column.id];
-                          return (
-                            <TableCell key={column.id} align={column.align}>
-                              {column.format && typeof value === 'number'
-                                ? column.format(value)
-                                : (column.id === 'image' ? <img src={value} alt="employee" width="50" height="50" /> : value)}
+                          if (column.id === 'action') {
+                            return <TableCell key={column.id} align={column.align}>
+                              <Button variant="contained">
+                                <Link to={"/edit/" + row.id} className="btn-link">Edit</Link>
+                              </Button>&nbsp;
+                              <Button color="error" variant="contained" onClick={onDeleteHandler.bind(this, row.id)}>
+                                Delete
+                              </Button>
                             </TableCell>
-                          );
+                          } else {
+                            const value = row[column.id];
+                            return (
+                              <TableCell key={column.id} align={column.align}>
+                                {column.format && typeof value === 'number'
+                                  ? column.format(value)
+                                  : (column.id === 'image' ? <img src={value} alt="employee" width="50" height="50" /> : value)}
+                              </TableCell>
+                            );
+                          }
                         })}
                       </TableRow>
                     );
